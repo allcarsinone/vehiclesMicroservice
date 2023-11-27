@@ -27,7 +27,7 @@ function makeApp(brandRepository, gasTypeRepository, vehicleRepository,
     app.set('DeleteVehicleController', new DeleteVehicleController(vehicleRepository));
     app.set('LogAdapter', logAdapter) // Log adapter: ex: rabbitmq
     app.set('AuthAdapter', authService)
-    app.use('/stands', router);
+    app.use('/vehicle', router);
     return app;
 }
 
