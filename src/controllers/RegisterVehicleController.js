@@ -1,4 +1,4 @@
-const LogService = require('../services/LogService');
+//const LogService = require('../services/LogService');
 const RegisterVehicleUseCase = require('../usecases/RegisterVehicleUseCase/RegisterVehicle.usecase');
 
 /**
@@ -8,7 +8,7 @@ const RegisterVehicleUseCase = require('../usecases/RegisterVehicleUseCase/Regis
 class RegisterVehicleController {
     constructor(vehicleRepository, logService) {
         this.vehicleRepository = vehicleRepository
-        this.logService = logService
+        //this.logService = logService
     }
 
     async execute(request, response) {

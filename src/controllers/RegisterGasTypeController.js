@@ -1,4 +1,4 @@
-const LogService = require('../services/LogService');
+//const LogService = require('../services/LogService');
 const RegisterGasTypeUseCase = require('../usecases/RegisterGasTypeUseCase/RegisterGasType.usecase');
 
 /**
@@ -9,7 +9,7 @@ class RegisterGasTypeController {
 
     constructor(gasTypeRepository, logService) {
         this.gasTypeRepository = gasTypeRepository
-        this.logService = logService
+        //this.logService = logService
     }
 
     async execute(request, response) {
