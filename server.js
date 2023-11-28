@@ -6,8 +6,10 @@ const PostgreBrandRepository = require('./src/repositories/PostgreBrandRepositor
 
 dotenv.config()
 
-const app = makeApp(new PostgreVehicleRepository(process.env.DATABASE_URL), new PostgreGasTypeRepository(process.env.DATABASE_URL), new PostgreBrandRepository(process.env.DATABASE_URL))
+const app = makeApp(new PostgreVehicleRepository(process.env.DATABASE_URL), 
+                    new PostgreGasTypeRepository(process.env.DATABASE_URL), 
+                    new PostgreBrandRepository(process.env.DATABASE_URL))
 
 app.listen(process.env.PORT || 3000, () => {
-    console.log('Server is running on http://localhost:${process.env.PORT || 3000}/')
+    console.log(`Server is running on http://localhost:${process.env.PORT || 3000}/`)
 })

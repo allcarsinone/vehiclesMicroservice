@@ -1,4 +1,5 @@
 const Brand = require('../../entities/Brand')
+const crypto = require('crypto')
 const { Result, handleError } = require('../../util/Result')
 
 class RegisterBrandUseCase {
@@ -12,13 +13,13 @@ class RegisterBrandUseCase {
 
     async execute(registerBrandDto) {
         const withErrorHandling = handleError(async () => {
-            const brandAlreadyExists = await this.brandRepository.findByID(registerBrandDto.brandid)
+            const brandAlreadyExists = await this.brandRepository.findByName(registerBrandDto.name)
             if (brandAlreadyExists) {
                 return Result.failed(new Error('The brand already exists'))
             }
 
-            const id = crypto.randomUUID()
-            let brand = Brand.create(registerBrandDto.name, id)
+            //const id = crypto.randomUUID()
+            let brand = Brand.create(registerBrandDto.name)
             brand = await this.brandRepository.create(brand)
 
             return Result.success(brand.toJson())

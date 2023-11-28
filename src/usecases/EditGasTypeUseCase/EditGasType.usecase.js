@@ -12,7 +12,7 @@ class EditGasTypeUseCase {
 
     async execute(editGasTypeDto) {
         const withErrorHandling = handleError(async () => {
-            const gasTypeExists = await this.gasTypeRepository.findByID(editGasTypeDto.gastypeid)
+            const gasTypeExists = await this.gasTypeRepository.findByID(editGasTypeDto.id)
             if(!gasTypeExists) {
                 return Result.failed(new Error('Gas type doesnt exists'))
             }

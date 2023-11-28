@@ -9,16 +9,16 @@ class PostgreGasTypeRepository {
     async create (gasType) {
         const client = new pg.Client(this.baseURI)
         await client.connect()
-        const result = await client.query(`INSERT INTO gastype (name) VALUES ($1) RETURNING *`,
+        const result = await client.query(`INSERT INTO gastypes (name) VALUES ($1) RETURNING *`,
         [gasType.name])
         await client.end()
-        return new GasType(result.rows[0].name, result.rows[0].gastypeid)
+        return new GasType(result.rows[0].name, result.rows[0].id)
     }
 
-    async deleteGasType (gasTypeId) {
+    async deleteGasType (id) {
         const client = new pg.Client(this.baseURI)
         await client.connect()
-        await client.query(`DELETE FROM gastype WHERE gastypeid = $1`, [gasTypeId])
+        await client.query(`DELETE FROM gastypes WHERE id = $1`, [id])
         await client.end()
         return ''
     }
@@ -26,29 +26,40 @@ class PostgreGasTypeRepository {
     async editGasType (gasType) {
         const client = new pg.Client(this.baseURI)
         await client.connect()
-        await client.query(`UPDATE gastype SET name = $1 WHERE gastypeid = $2`,
-        [gasType.name, gasType.gastypeid])
+        await client.query(`UPDATE gastypes SET name = $1 WHERE id = $2`,
+        [gasType.name, gasType.id])
         await client.end()
-        return new GasType(gasType.name, gasType.gastypeid)
+        return new GasType(gasType.name, gasType.id)
     }
 
     async wipe () {
         const client = new pg.Client(this.baseURI)
         await client.connect()
-        await client.query(`DELETE FROM gastype`)
+        await client.query(`DELETE FROM gastypes`)
         await client.end()
     }
 
-    async findByID (gasTypeID) {
+    async findByID (id) {
         const client = new pg.Client(this.baseURI)
         await client.connect()
-        const result = await client.query(`SELECT * FROM gastype WHERE gastypeid = $1`, [gasTypeID])
+        const result = await client.query(`SELECT * FROM gastypes WHERE id = $1`, [id])
         await client.end()
         if (result.rows.length === 0) {
             return undefined
         }
-        return new GasType(result.rows[0].name, result.rows[0].gastypeid)
+        return new GasType(result.rows[0].name, result.rows[0].id)
     }
+
+    async findByName (name) {
+        const client = new pg.Client(this.baseURI)
+        await client.connect()
+        const result = await client.query(`SELECT * FROM gastypes WHERE name = $1`, [name])
+        await client.end()
+        if (result.rows.length === 0) {
+            return undefined
+        }
+    }
+        
 }
 
 module.exports = PostgreGasTypeRepository

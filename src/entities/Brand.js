@@ -15,12 +15,12 @@ class Brand {
         this.name = brandDto.name ? brandDto.name : this.name;
     }
 
-    static create(name, id=undefined) {
+    static create(name) {
         if(!name) {
             throw new Error('Invalid brand data');
         }
 
-        return new Brand(name, id);
+        return new Brand(name);
     }
 }
 

@@ -1,4 +1,5 @@
 const DeleteBrandUseCase = require('../usecases/DeleteBrandUseCase/DeleteBrand.usecase');
+const LogService = require('./services/LogService');
 
 /**
  * @class DeleteBrandController
@@ -10,12 +11,13 @@ class DeleteBrandController {
      * @description Constructor of DeleteBrandController
      * @param {*} brandRepository a brandRepository
      */
-    constructor (brandRepository) {
+    constructor (brandRepository, logService) {
         this.brandRepository = brandRepository
+        this.logService = logService
     }
 
     async execute(request, response) {
-        let { brandid } = request.params || {}
+        let { brandid } = request.body || {}
         if(!brandid) {
             await LogService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: 'All fields are required. It should have brandid' })

@@ -1,4 +1,5 @@
 const EditGasTypeUseCase = require('../usecases/EditGasTypeUseCase/EditGasType.usecase')
+const LogService = require('./services/LogService')
 
 /**
  * @class EditGasTypeController
@@ -9,20 +10,21 @@ class EditGasTypeController {
      * @description Constructor of EditGasTypeController
      * @param {*} gasTypeRepository a gasTypeRepository
      */
-    constructor (gasTypeRepository) {
+    constructor (gasTypeRepository, logService) {
         this.gasTypeRepository = gasTypeRepository
+        this.logService = logService
     }
 
     async execute(request, response) {
-        let { gastypeid, name } = request.body || {}
+        let { id, name } = request.body || {}
 
-        if(!gastypeid || !name) {
+        if(!id || !name) {
             await LogService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: 'All fields are required. It should have gastypeid, name' })
         }
 
         const usecase = new EditGasTypeUseCase(this.gasTypeRepository)
-        const gasType = await usecase.execute({gastypeid, name})
+        const gasType = await usecase.execute({id, name})
 
         if(gasType.error) {
             await LogService.execute({from: 'VehiclesService', data: gasType.error.message, date: new Date(), status: 'error'}, this.logService)

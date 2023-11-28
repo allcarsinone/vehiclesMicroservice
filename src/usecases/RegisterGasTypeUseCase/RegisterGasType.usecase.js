@@ -12,13 +12,13 @@ class RegisterGasTypeUseCase {
 
     async execute(registerGasTypeDto) {
         const withErrorHandling = handleError(async () => {
-            const gasTypeAlreadyExists = await this.gasTypeRepository.findByID(registerGasTypeDto.gastypeid)
+            const gasTypeAlreadyExists = await this.gasTypeRepository.findByName(registerGasTypeDto.name)
             if (gasTypeAlreadyExists) {
                 return Result.failed(new Error('The gas type already exists'))
             }
 
-            const id = crypto.randomUUID()
-            let gastype = GasType.create(registerGasTypeDto.name, id)
+            //const id = crypto.randomUUID()
+            let gastype = GasType.create(registerGasTypeDto.name)
             gastype = await this.gasTypeRepository.create(gastype)
 
             return Result.success(gastype.toJson())

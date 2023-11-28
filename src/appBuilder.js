@@ -12,7 +12,7 @@ const DeleteVehicleController = require('./controllers/DeleteVehicleController')
 const LogMockAdapter = require('./adapters/LogMockAdapter')
 const MockAuthServiceAdapter = require('./adapters/MockAuthServiceAdapter')
 
-function makeApp(brandRepository, gasTypeRepository, vehicleRepository,
+function makeApp(vehicleRepository, gasTypeRepository, brandRepository,
     logAdapter = new LogMockAdapter(), authService = new MockAuthServiceAdapter()) {
     const app = express();
     app.use(express.json());
