@@ -1,5 +1,5 @@
-//const LogService = require('../services/LogService');
 const RegisterVehicleUseCase = require('../usecases/RegisterVehicleUseCase/RegisterVehicle.usecase');
+const LogService = require('./services/LogService');
 
 /**
  * @Class RegisterVehicleController
@@ -8,14 +8,14 @@ const RegisterVehicleUseCase = require('../usecases/RegisterVehicleUseCase/Regis
 class RegisterVehicleController {
     constructor(vehicleRepository, logService) {
         this.vehicleRepository = vehicleRepository
-        //this.logService = logService
+        this.logService = logService
     }
 
     async execute(request, response) {
         let { standid, brandid, gastypeid, model, year, mileage, price, availability, description } = request.body
 
         if(!standid || !brandid || !gastypeid || !model || !year || !mileage || !price || !availability || !description) {
-            //await LogService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
+            await LogService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: 'All fields are required. It should have standid, brandid, gastypeid, model, year, mileage, price, availability, description' })
         }
 
@@ -23,11 +23,11 @@ class RegisterVehicleController {
         const vehicle = await usecase.execute({standid, brandid, gastypeid, model, year, mileage, price, availability, description})
 
         if(vehicle.error) {
-            //await LogService.execute({from: 'VehiclesService', data: vehicle.error.message, date: new Date(), status: 'error'}, this.logService)
+            await LogService.execute({from: 'VehiclesService', data: vehicle.error.message, date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: vehicle.error.message })
         }
 
-        //await LogService.execute({from: 'VehiclesService', data: `Vehicle ${vehicle.data.model} created`, date: new Date(), status: 'success'}, this.logService)
+        await LogService.execute({from: 'VehiclesService', data: `Vehicle ${vehicle.data.model} created`, date: new Date(), status: 'success'}, this.logService)
         return response.status(201).json(vehicle.data)
     }
 }

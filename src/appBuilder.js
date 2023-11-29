@@ -17,14 +17,14 @@ function makeApp(vehicleRepository, gasTypeRepository, brandRepository,
     const app = express();
     app.use(express.json());
     app.set('RegisterBrandController', new RegisterBrandController(brandRepository, logAdapter));
-    app.set('EditBrandController', new EditBrandController(brandRepository));
-    app.set('DeleteBrandController', new DeleteBrandController(brandRepository));
+    app.set('EditBrandController', new EditBrandController(brandRepository, logAdapter));
+    app.set('DeleteBrandController', new DeleteBrandController(brandRepository, logAdapter));
     app.set('RegisterGasTypeController', new RegisterGasTypeController(gasTypeRepository, logAdapter));
-    app.set('EditGasTypeController', new EditGasTypeController(gasTypeRepository));
-    app.set('DeleteGasTypeController', new DeleteGasTypeController(gasTypeRepository));
+    app.set('EditGasTypeController', new EditGasTypeController(gasTypeRepository, logAdapter));
+    app.set('DeleteGasTypeController', new DeleteGasTypeController(gasTypeRepository, logAdapter));
     app.set('RegisterVehicleController', new RegisterVehicleController(vehicleRepository, logAdapter));
-    app.set('EditVehicleController', new EditVehicleController(vehicleRepository));
-    app.set('DeleteVehicleController', new DeleteVehicleController(vehicleRepository));
+    app.set('EditVehicleController', new EditVehicleController(vehicleRepository, logAdapter));
+    app.set('DeleteVehicleController', new DeleteVehicleController(vehicleRepository, logAdapter));
     app.set('LogAdapter', logAdapter) // Log adapter: ex: rabbitmq
     app.set('AuthAdapter', authService)
     app.use('/vehicle', router);

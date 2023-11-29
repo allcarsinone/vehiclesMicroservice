@@ -1,12 +1,15 @@
 const EditVehicleUseCase = require('../usecases/EditVehicleUseCase/EditVehicle.usecase')
+const LogService = require('./services/LogService')
 
 class EditVehicleController {
     /**
      * Constructor of EditVehicleController
      * @param {*} vehicleRepository a vehicleRepository 
+     * @param {*} logService a logService
      */
-    constructor (vehicleRepository) {
+    constructor (vehicleRepository, logService) {
         this.vehicleRepository = vehicleRepository
+        this.logService = logService
     }
 
     async execute(request, response) {
@@ -24,6 +27,7 @@ class EditVehicleController {
             return response.status(400).json({ error: vehicle.error.message })
         }
 
+        await LogService.execute({from: 'VehiclesService', data: `Vehicle ${vehicle.data.vehicleid} edited`, date: new Date(), status: 'success'}, this.logService)
         return response.status(200).json(vehicle.data)
     }
 }

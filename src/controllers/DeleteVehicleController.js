@@ -1,4 +1,5 @@
 const DeleteVehicleUseCase = require('../usecases/DeleteVehicleUseCase/DeleteVehicle.usecase')
+const LogService = require('./services/LogService')
 
 /**
  * @class DeleteVehicleController
@@ -8,13 +9,15 @@ class DeleteVehicleController {
     /**
      * @description Constructor of DeleteVehicleController
      * @param {*} vehicleRepository a vehicleRepository
+     * @param {*} logService a logService
      */
-    constructor (vehicleRepository) {
+    constructor (vehicleRepository, logService) {
         this.vehicleRepository = vehicleRepository
+        this.logService = logService
     }
 
     async execute(request, response) {
-        let { vehicleid } = request.params || {}
+        let { vehicleid } = request.body || {}
         if(!vehicleid) {
             await LogService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: 'All fields are required. It should have vehicleid' })
@@ -27,7 +30,8 @@ class DeleteVehicleController {
             await LogService.execute({from: 'VehiclesService', data: vehicle.error.message, date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: vehicle.error.message })
         }
-
+        
+        await LogService.execute({from: 'VehiclesService', data: `Vehicled deleted`, date: new Date(), status: 'success'}, this.logService)
         return response.status(204).json({})
     }
 }

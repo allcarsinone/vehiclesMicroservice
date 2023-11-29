@@ -10,6 +10,7 @@ class DeleteBrandController {
     /**
      * @description Constructor of DeleteBrandController
      * @param {*} brandRepository a brandRepository
+     * @param {*} logService a logService
      */
     constructor (brandRepository, logService) {
         this.brandRepository = brandRepository
@@ -31,6 +32,7 @@ class DeleteBrandController {
             return response.status(400).json({ error: brand.error.message })
         }
 
+        await LogService.execute({from: 'VehiclesService', data: `Brand deleted`, date: new Date(), status: 'success'}, this.logService)
         return response.status(204).json({})
     }
 }

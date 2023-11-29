@@ -13,14 +13,13 @@ class RegisterVehicleUseCase {
 
     async execute(registerVehicleDto) {
         const withErrorHandling = handleError(async () => {
-            const vehicleAlreadyExists = await this.vehicleRepository.findByID(registerVehicleDto.vehicleid)
+            /*const vehicleAlreadyExists = await this.vehicleRepository.findByID(registerVehicleDto.vehicleid)
             if (vehicleAlreadyExists) {
                 return Result.failed(new Error('Vehicle already exists'))
-            }
+            }*/
 
-            const id = crypto.randomUUID()
             let vehicle = Vehicle.create(registerVehicleDto.standid, registerVehicleDto.brandid, registerVehicleDto.gastypeid, registerVehicleDto.model,
-                registerVehicleDto.year, registerVehicleDto.mileage, registerVehicleDto.price, registerVehicleDto.availability, registerVehicleDto.description, id)
+                registerVehicleDto.year, registerVehicleDto.mileage, registerVehicleDto.price, registerVehicleDto.availability, registerVehicleDto.description)
             vehicle = await this.vehicleRepository.create(vehicle)
 
             return Result.success(vehicle.toJson())

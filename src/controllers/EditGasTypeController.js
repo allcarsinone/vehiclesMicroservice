@@ -9,6 +9,7 @@ class EditGasTypeController {
     /**
      * @description Constructor of EditGasTypeController
      * @param {*} gasTypeRepository a gasTypeRepository
+     * @param {*} logService a logService
      */
     constructor (gasTypeRepository, logService) {
         this.gasTypeRepository = gasTypeRepository
@@ -31,6 +32,7 @@ class EditGasTypeController {
             return response.status(400).json({ error: gasType.error.message })
         }
 
+        await LogService.execute({from: 'VehiclesService', data: `Gas ${gasType.data.name} edited`, date: new Date(), status: 'success'}, this.logService)
         return response.status(200).json(gasType.data)
     }
 }

@@ -1,9 +1,9 @@
 class Vehicle {
 
-    constructor(stand, brand, gastype, model, year, mileage, price, availability, description, id=undefined) {
-        this.stand = stand;
-        this.brand = brand;
-        this.gastype = gastype;
+    constructor(standid, brandid, gastypeid, model, year, mileage, price, availability, description, id=undefined) {
+        this.standid = standid;
+        this.brandid = brandid;
+        this.gastypeid = gastypeid;
         this.model = model;
         this.year = year;
         this.mileage = mileage;
@@ -15,9 +15,9 @@ class Vehicle {
 
     toJson() {
         return {
-            stand: this.stand,
-            brand: this.brand,
-            gastype: this.gastype,
+            standid: this.standid,
+            brandid: this.brandid,
+            gastypeid: this.gastypeid,
             model: this.model,
             year: this.year,
             mileage: this.mileage,
@@ -28,9 +28,9 @@ class Vehicle {
     }
 
     editVehicle(vehicleDto) {
-        this.stand = vehicleDto.stand ? vehicleDto.stand : this.stand;
-        this.brand = vehicleDto.brand ? vehicleDto.brand : this.brand;
-        this.gastype = vehicleDto.gastype ? vehicleDto.gastype : this.gastype;
+        this.standid = vehicleDto.standid ? vehicleDto.standid : this.standid;
+        this.brandid = vehicleDto.brandid ? vehicleDto.brandid : this.brandid;
+        this.gastypeid = vehicleDto.gastypeid ? vehicleDto.gastypeid : this.gastypeid;
         this.model = vehicleDto.model ? vehicleDto.model : this.model;
         this.year = vehicleDto.year ? vehicleDto.year : this.year;
         this.mileage = vehicleDto.mileage ? vehicleDto.mileage : this.mileage;
@@ -39,12 +39,12 @@ class Vehicle {
         this.description = vehicleDto.description ? vehicleDto.description : this.description;
     }
 
-    static create(stand, brand, gastype, model, year, mileage, price, availability, description, id=undefined) {
-        if(!stand || !brand || !gastype || !model || !year || !mileage || !price || !availability || !description) {
+    static create(standid, brandid, gastypeid, model, year, mileage, price, availability, description, id=undefined) {
+        if(!standid || !brandid || !gastypeid || !model || !year || !mileage || !price || !availability || !description) {
             throw new Error('Invalid vehicle data');
         }
         
-        return new Vehicle(stand, brand, gastype, model, year, mileage, price, availability, description, id);
+        return new Vehicle(standid, brandid, gastypeid, model, year, mileage, price, availability, description, id);
     }
 }
 

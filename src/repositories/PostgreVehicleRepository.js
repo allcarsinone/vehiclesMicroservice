@@ -12,7 +12,8 @@ class PostgreVehicleRepository {
     const result = await client.query(`INSERT INTO vehicles (standid, brandid, gastypeid, model, year, mileage, price, availability, description) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
     [vehicle.standid, vehicle.brandid, vehicle.gastypeid, vehicle.model, vehicle.year, vehicle.mileage, vehicle.price, vehicle.availability, vehicle.description])
     await client.end()
-    return new Vehicle(result.rows[0].standid, result[0].brandid, result.rows[0].gastypeid, result.rows[0].model, result.rows[0].year, result.rows[0].mileage, result.rows[0].price, result.rows[0].availability, result.rows[0].description, result.rows[0].id)
+    
+    return new Vehicle(result.rows[0].standid, result.rows[0].brandid, result.rows[0].gastypeid, result.rows[0].model, result.rows[0].year, result.rows[0].mileage, result.rows[0].price, result.rows[0].availability, result.rows[0].description, result.rows[0].id)
   }
 
   async deleteVehicle (id) {

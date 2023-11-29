@@ -1,4 +1,6 @@
 const EditBrandUseCase = require('../usecases/EditBrandUseCase/EditBrand.usecase')
+const LogService = require('./services/LogService')
+
 
 /**
  * @class EditBrandController
@@ -8,9 +10,11 @@ class EditBrandController {
     /**
      * @description Constructor of EditBrandController
      * @param {*} brandRepository a brandRepository
+     * @param {*} logService a logService
      */
-    constructor (brandRepository) {
+    constructor (brandRepository, logService) {
         this.brandRepository = brandRepository
+        this.logService = logService
     }
 
     async execute(request, response) {
@@ -29,6 +33,7 @@ class EditBrandController {
             return response.status(400).json({ error: brand.error.message })
         }
 
+        await LogService.execute({from: 'VehiclesService', data: `Brand ${brand.data.name} edited`, date: new Date(), status: 'success'}, this.logService)
         return response.status(200).json(brand.data)
     }
 }

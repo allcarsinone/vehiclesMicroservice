@@ -12,7 +12,7 @@ class DeleteGasTypeController {
      */
     constructor (gasTypeRepository, logService) {
     this.gasTypeRepository = gasTypeRepository
-    this.logService = this.logService
+    this.logService = logService
     }
 
     async execute(request, response) {
@@ -30,6 +30,7 @@ class DeleteGasTypeController {
             return response.status(400).json({ error: gasType.error.message })
         }
 
+        await LogService.execute({from: 'VehiclesService', data: `Gas Type deleted`, date: new Date(), status: 'success'}, this.logService)
         return response.status(204).json({})
     }
 
