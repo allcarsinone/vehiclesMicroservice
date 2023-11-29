@@ -12,7 +12,7 @@ class PostgreVehicleRepository {
     const result = await client.query(`INSERT INTO vehicles (standid, brandid, gastypeid, model, year, mileage, price, availability, description) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
     [vehicle.standid, vehicle.brandid, vehicle.gastypeid, vehicle.model, vehicle.year, vehicle.mileage, vehicle.price, vehicle.availability, vehicle.description])
     await client.end()
-    
+
     return new Vehicle(result.rows[0].standid, result.rows[0].brandid, result.rows[0].gastypeid, result.rows[0].model, result.rows[0].year, result.rows[0].mileage, result.rows[0].price, result.rows[0].availability, result.rows[0].description, result.rows[0].id)
   }
 
@@ -49,6 +49,44 @@ class PostgreVehicleRepository {
       return undefined
     }
     return new Vehicle(result.rows[0].standid, result.rows[0].brandid, result.rows[0].gastypeid, result.rows[0].model, result.rows[0].year, result.rows[0].mileage, result.rows[0].price, result.rows[0].availability, result.rows[0].description, result.rows[0].id)
+  }
+
+  mapRows(rows) {
+    return rows.map((row) => {
+      return new Vehicle(row.standid, row.brandid, row.gastypeid, row.model, row.year, row.mileage, row.price, row.availability, row.description, row.id)
+    })
+  }
+
+  async findByStand (standid) {
+    const client = new pg.Client(this.baseURI)
+    await client.connect()
+    const result = await client.query(`SELECT * FROM vehicles INNER JOIN brands ON brands.id = vehicles.brandid INNER JOIN gastypes ON gastypes.id = vehicles.gastypeid WHERE standid = $1`, [standid])
+    await client.end()
+
+    if (result.rows.length === 0) {
+      return undefined
+    }
+
+    const map = this.mapRows(result.rows)
+  
+    return map
+
+  }
+
+  async findByBrand (brandname) {
+    const client = new pg.Client(this.baseURI)
+    await client.connect()
+    const result = await client.query(`SELECT * FROM vehicles INNER JOIN brands ON vehicles.brandid = brands.id WHERE LOWER(brands.name) LIKE LOWER('%$1%')`, [brandname])
+    await client.end()
+    
+    if (result.rows.length === 0) {
+      return undefined
+    }
+
+    const map = this.mapRows(result.rows)
+  
+    return map
+
   }
 
 }
