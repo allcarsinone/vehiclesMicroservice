@@ -7,6 +7,16 @@ router.post('/register', AuthServiceMiddleware.execute, async (req, res) => {
     controller.execute(req, res)
 })
 
+router.get('/get', async (req, res) => {
+    const controller = req.app.get('GetVehicleDetailsController')
+    controller.execute(req, res)
+})
+
+router.get('/filter', AuthServiceMiddleware.execute, async (req, res) => {
+    const controller = req.app.get('FilterVehiclesController')
+    controller.execute(req, res)
+})
+
 router.put('/edit', AuthServiceMiddleware.execute, async (req, res) => {
     const controller = req.app.get('EditVehicleController')
     controller.execute(req, res)

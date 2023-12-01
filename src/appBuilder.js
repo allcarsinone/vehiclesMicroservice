@@ -12,6 +12,8 @@ const DeleteVehicleController = require('./controllers/DeleteVehicleController')
 const LogMockAdapter = require('./adapters/LogMockAdapter')
 const MockAuthServiceAdapter = require('./adapters/MockAuthServiceAdapter');
 const StandMockAdapter = require('./adapters/StandMockAdapter');
+const GetVehicleDetailsController = require('./controllers/GetVehicleDetailsController');
+const FilterVehiclesController = require('./controllers/FilterVehiclesController');
 
 function makeApp(vehicleRepository, gasTypeRepository, brandRepository,
     logAdapter = new LogMockAdapter(), authService = new MockAuthServiceAdapter(), standService = new StandMockAdapter) {
@@ -26,6 +28,8 @@ function makeApp(vehicleRepository, gasTypeRepository, brandRepository,
     app.set('RegisterVehicleController', new RegisterVehicleController(vehicleRepository, logAdapter));
     app.set('EditVehicleController', new EditVehicleController(vehicleRepository, logAdapter));
     app.set('DeleteVehicleController', new DeleteVehicleController(vehicleRepository, logAdapter));
+    app.set('GetVehicleDetailsController', new GetVehicleDetailsController(vehicleRepository, logAdapter));
+    app.set('FilterVehiclesController', new FilterVehiclesController(vehicleRepository, logAdapter));
     app.set('LogAdapter', logAdapter) // Log adapter: ex: rabbitmq
     app.set('AuthAdapter', authService)
     app.set('StandService', standService)

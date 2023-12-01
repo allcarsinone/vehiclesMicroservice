@@ -13,7 +13,7 @@ class PostgreVehicleRepository {
     [vehicle.standid, vehicle.brandid, vehicle.gastypeid, vehicle.model, vehicle.year, vehicle.mileage, vehicle.price, vehicle.availability, vehicle.description])
     await client.end()
 
-    return new Vehicle(result.rows[0].standid, result.rows[0].brandid, result.rows[0].gastypeid, result.rows[0].model, result.rows[0].year, result.rows[0].mileage, result.rows[0].price, result.rows[0].availability, result.rows[0].description, result.rows[0].id)
+    return new Vehicle(result.rows[0])
   }
 
   async deleteVehicle (id) {
@@ -27,10 +27,10 @@ class PostgreVehicleRepository {
   async editVehicle (vehicle) {
     const client = new pg.Client(this.baseURI)
     await client.connect()
-    await client.query(`UPDATE vehicles SET standid = $1, brandid = $2, gastypeid = $3, model = $4, year = $5, mileage = $6, price = $7, availability = $8, description = $9 WHERE id = $10`,
+    const result = await client.query(`UPDATE vehicles SET standid = $1, brandid = $2, gastypeid = $3, model = $4, year = $5, mileage = $6, price = $7, availability = $8, description = $9 WHERE id = $10 RETURNING *`,
     [vehicle.standid, vehicle.brandid, vehicle.gastypeid, vehicle.model, vehicle.year, vehicle.mileage, vehicle.price, vehicle.availability, vehicle.description, vehicle.id])
     await client.end()
-    return new Vehicle(vehicle.standid, vehicle.brandid, vehicle.gastypeid, vehicle.model, vehicle.year, vehicle.mileage, vehicle.price, vehicle.availability, vehicle.description, vehicle.id)
+    return new Vehicle(result.rows[0])
   }
 
   async wipe () {
@@ -48,7 +48,7 @@ class PostgreVehicleRepository {
     if (result.rows.length === 0) {
       return undefined
     }
-    return new Vehicle(result.rows[0].standid, result.rows[0].brandid, result.rows[0].gastypeid, result.rows[0].model, result.rows[0].year, result.rows[0].mileage, result.rows[0].price, result.rows[0].availability, result.rows[0].description, result.rows[0].id)
+    return new Vehicle(result.rows[0])
   }
 
   mapRows(rows) {
@@ -56,6 +56,7 @@ class PostgreVehicleRepository {
       return new Vehicle(row.standid, row.brandid, row.gastypeid, row.model, row.year, row.mileage, row.price, row.availability, row.description, row.id)
     })
   }
+
 
   async findByStand (standid) {
     const client = new pg.Client(this.baseURI)
@@ -86,6 +87,63 @@ class PostgreVehicleRepository {
     const map = this.mapRows(result.rows)
   
     return map
+
+  }
+
+  async getVehicleDetails (vehicleid) {
+    const client = new pg.Client(this.baseURI)
+    await client.connect()
+    const result = await client.query(`SELECT vc.*, brands.name as "brandname", gp.name as "gastypename" FROM vehicles vc INNER JOIN brands ON vc.brandid = brands.id INNER JOIN gastypes gp ON gp.id = vc.gastypeid WHERE vc.id = $1`, [vehicleid])
+    await client.end()
+    
+    if (result.rows.length === 0) {
+      return undefined
+    }
+  
+    return new Vehicle(result.rows[0]) 
+
+  }
+
+  async getVehiclesFilter (vehicle) {
+    const client = new pg.Client(this.baseURI)
+    await client.connect()
+    const result = await client.query(`SELECT vh.id, vh.model, vh.year, vh.mileage, vh.price, vh.availability, vh.description, br.name as brandname, gp.name as gastypename FROM vehicles vh INNER JOIN brands br ON br.id = vh.brandid INNER JOIN gastypes gp ON gp.id = vh.gastypeid`)
+    await client.end()
+
+    if (result.rows.length === 0) {
+      return undefined
+    }
+
+    if (vehicle.brandname) {
+      const filterRegex = new RegExp(vehicle.brandname, 'i');
+      result.rows = result.rows.filter(row => filterRegex.test(row.brandname));
+    }
+    if(vehicle.model) {
+      const filterRegex = new RegExp(vehicle.model, 'i');
+      result.rows = result.rows.filter(row => filterRegex.test(row.model));
+    }
+    if(vehicle.year) {
+      result.rows = result.rows.filter(row => row.year <= vehicle.year)
+    }
+    if(vehicle.mileage) {
+      result.rows = result.rows.filter(row => row.mileage <= vehicle.mileage)
+    }
+    if(vehicle.price) {
+      result.rows = result.rows.filter(row => row.price <= vehicle.price)
+    }
+    if(vehicle.availability) {
+      result.rows = result.rows.filter(row => row.availability === vehicle.availability)
+    }
+    if(vehicle.description) {
+      const filterRegex = new RegExp(vehicle.description, 'i');
+      result.rows = result.rows.filter(row => filterRegex.test(row.description));
+    }
+    if(vehicle.gastypename) {
+      const filterRegex = new RegExp(vehicle.gastypename, 'i');
+      result.rows = result.rows.filter(row => filterRegex.test(row.gastypename));
+    }
+
+    return result.rows;
 
   }
 

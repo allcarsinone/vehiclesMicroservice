@@ -18,8 +18,7 @@ class RegisterVehicleUseCase {
                 return Result.failed(new Error('Vehicle already exists'))
             }*/
 
-            let vehicle = Vehicle.create(registerVehicleDto.standid, registerVehicleDto.brandid, registerVehicleDto.gastypeid, registerVehicleDto.model,
-                registerVehicleDto.year, registerVehicleDto.mileage, registerVehicleDto.price, registerVehicleDto.availability, registerVehicleDto.description)
+            let vehicle = Vehicle.create(registerVehicleDto)
             vehicle = await this.vehicleRepository.create(vehicle)
 
             return Result.success(vehicle.toJson())
