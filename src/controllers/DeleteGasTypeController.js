@@ -1,5 +1,4 @@
 const DeleteGasTypeUseCase = require('../usecases/DeleteGasTypeUseCase/DeleteGasType.usecase')
-const LogService = require('./services/LogService')
 
 /**
  * @class DeleteGasTypeController

@@ -1,4 +1,3 @@
-const LogService = require('./services/LogService');
 const RegisterBrandUseCase = require('../usecases/RegisterBrandUseCase/RegisterBrand.usecase');
 
 class RegisterBrandController {

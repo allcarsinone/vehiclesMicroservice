@@ -1,6 +1,4 @@
 const EditBrandUseCase = require('../usecases/EditBrandUseCase/EditBrand.usecase')
-const LogService = require('./services/LogService')
-
 
 /**
  * @class EditBrandController

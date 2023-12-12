@@ -1,5 +1,4 @@
 const EditGasTypeUseCase = require('../usecases/EditGasTypeUseCase/EditGasType.usecase')
-const LogService = require('./services/LogService')
 
 /**
  * @class EditGasTypeController

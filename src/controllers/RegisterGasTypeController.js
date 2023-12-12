@@ -1,5 +1,4 @@
 const RegisterGasTypeUseCase = require('../usecases/RegisterGasTypeUseCase/RegisterGasType.usecase');
-const LogService = require('./services/LogService');
 
 /**
  * @Class RegisterGasTypeController

@@ -1,5 +1,4 @@
 const DeleteBrandUseCase = require('../usecases/DeleteBrandUseCase/DeleteBrand.usecase');
-const LogService = require('./services/LogService');
 
 /**
  * @class DeleteBrandController

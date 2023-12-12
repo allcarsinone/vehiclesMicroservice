@@ -1,5 +1,4 @@
 const DeleteVehicleUseCase = require('../usecases/DeleteVehicleUseCase/DeleteVehicle.usecase')
-const LogService = require('./services/LogService')
 
 /**
  * @class DeleteVehicleController

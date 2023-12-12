@@ -1,5 +1,4 @@
 const GetVehicleDetailsUseCase = require('../usecases/GetVehicleDetailsUseCase/GetVehicleDetails.usecase');
-const LogService = require('./services/LogService');
 
 /**
  * @Class GetVehicleDetailsController

@@ -1,5 +1,4 @@
 const EditVehicleUseCase = require('../usecases/EditVehicleUseCase/EditVehicle.usecase')
-const LogService = require('./services/LogService')
 
 class EditVehicleController {
     /**
