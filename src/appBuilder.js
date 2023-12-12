@@ -33,7 +33,7 @@ function makeApp(vehicleRepository, gasTypeRepository, brandRepository,
     app.set('LogAdapter', logAdapter) // Log adapter: ex: rabbitmq
     app.set('AuthAdapter', authService)
     app.set('StandService', standService)
-    app.use('/vehicle', router);
+    app.use('/vehicles', router);
     return app;
 }
 
