@@ -16,6 +16,6 @@ const app = makeApp(new PostgreVehicleRepository(process.env.DATABASE_URL),
                     new AxiosAuthServiceAdapter(process.env.AUTHSERVICE_URI),
                     new StandMockAdapter())
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log(`Server is running on http://localhost:${process.env.PORT || 3000}/`)
+app.listen(process.env.PORT, () => {
+    console.log(`Server is running on http://localhost:${process.env.PORT}/`)
 })
