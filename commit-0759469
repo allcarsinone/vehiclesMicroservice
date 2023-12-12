@@ -1,0 +1,237 @@
+From 07594699f8855e8974ab09f3a041d2b1296c4cc1 Mon Sep 17 00:00:00 2001
+From: goncalos10 <hugo10simoes10@gmail.com>
+Date: Tue, 12 Dec 2023 17:40:58 +0000
+Subject: add logmockadapter, axiosauthserviceadapter, standmockadapter
+
+
+diff --git a/server.js b/server.js
+index 8ac0619..2d98e68 100644
+--- a/server.js
++++ b/server.js
+@@ -3,12 +3,18 @@ const dotenv = require('dotenv')
+ const PostgreVehicleRepository = require('./src/repositories/PostgreVehicleRepository')
+ const PostgreGasTypeRepository = require('./src/repositories/PostgreGasTypeRepository')
+ const PostgreBrandRepository = require('./src/repositories/PostgreBrandRepository')
++const LogMockAdapter = require('./src/adapters/LogMockAdapter')
++const AxiosAuthServiceAdapter = require('./src/adapters/AxiosAuthServiceAdapter')
++const StandMockAdapter = require('./src/adapters/StandMockAdapter');
+ 
+ dotenv.config()
+ 
+ const app = makeApp(new PostgreVehicleRepository(process.env.DATABASE_URL), 
+                     new PostgreGasTypeRepository(process.env.DATABASE_URL), 
+-                    new PostgreBrandRepository(process.env.DATABASE_URL))
++                    new PostgreBrandRepository(process.env.DATABASE_URL),
++                    new LogMockAdapter(),
++                    new AxiosAuthServiceAdapter(process.env.AUTHSERVICE_URI),
++                    new StandMockAdapter())
+ 
+ app.listen(process.env.PORT || 3000, () => {
+     console.log(`Server is running on http://localhost:${process.env.PORT || 3000}/`)
+diff --git a/src/adapters/ElasticSearchAdapter.js b/src/adapters/ElasticSearchAdapter.js
+new file mode 100644
+index 0000000..5260540
+--- /dev/null
++++ b/src/adapters/ElasticSearchAdapter.js
+@@ -0,0 +1,26 @@
++const { Client } = require('@elastic/elasticsearch')
++
++class ElasticLogService {
++  constructor (elasticURI) {
++    this.elasticsearchClient = new Client({
++      node: elasticURI,
++      log: 'trace',
++      headers: {
++        'Content-Type': 'application/json'
++      }
++    })
++  }
++
++  async execute (service, message, levelType) {
++    try {
++      await this.elasticsearchClient.index({
++        index: 'logs',
++        body: { service, message, timestamp: new Date(), level: levelType }
++      })
++    } catch (error) {
++      console.error('Failed to index document:', error)
++    }
++  }
++}
++
++module.exports = ElasticLogService
+\ No newline at end of file
+diff --git a/src/adapters/LogMockAdapter.js b/src/adapters/LogMockAdapter.js
+index 2af1e3d..3dbba09 100644
+--- a/src/adapters/LogMockAdapter.js
++++ b/src/adapters/LogMockAdapter.js
+@@ -1,7 +1,6 @@
+ class LogMockAdapter {
+-  execute (message, queueName = 'log') {
+-    console.log(message)
++  async execute (service, message, levelType) {
++    console.log({ service, message, timestamp: new Date(), level: levelType })
+   }
+ }
+-
+ module.exports = LogMockAdapter
+\ No newline at end of file
+diff --git a/src/controllers/DeleteBrandController.js b/src/controllers/DeleteBrandController.js
+index 134841b..e519484 100644
+--- a/src/controllers/DeleteBrandController.js
++++ b/src/controllers/DeleteBrandController.js
+@@ -1,5 +1,4 @@
+ const DeleteBrandUseCase = require('../usecases/DeleteBrandUseCase/DeleteBrand.usecase');
+-const LogService = require('./services/LogService');
+ 
+ /**
+  * @class DeleteBrandController
+diff --git a/src/controllers/DeleteGasTypeController.js b/src/controllers/DeleteGasTypeController.js
+index 199a4c2..d929264 100644
+--- a/src/controllers/DeleteGasTypeController.js
++++ b/src/controllers/DeleteGasTypeController.js
+@@ -1,5 +1,4 @@
+ const DeleteGasTypeUseCase = require('../usecases/DeleteGasTypeUseCase/DeleteGasType.usecase')
+-const LogService = require('./services/LogService')
+ 
+ /**
+  * @class DeleteGasTypeController
+diff --git a/src/controllers/DeleteVehicleController.js b/src/controllers/DeleteVehicleController.js
+index 523622b..815683b 100644
+--- a/src/controllers/DeleteVehicleController.js
++++ b/src/controllers/DeleteVehicleController.js
+@@ -1,5 +1,4 @@
+ const DeleteVehicleUseCase = require('../usecases/DeleteVehicleUseCase/DeleteVehicle.usecase')
+-const LogService = require('./services/LogService')
+ 
+ /**
+  * @class DeleteVehicleController
+diff --git a/src/controllers/EditBrandController.js b/src/controllers/EditBrandController.js
+index 74abc1a..4c272bd 100644
+--- a/src/controllers/EditBrandController.js
++++ b/src/controllers/EditBrandController.js
+@@ -1,6 +1,4 @@
+ const EditBrandUseCase = require('../usecases/EditBrandUseCase/EditBrand.usecase')
+-const LogService = require('./services/LogService')
+-
+ 
+ /**
+  * @class EditBrandController
+diff --git a/src/controllers/EditGasTypeController.js b/src/controllers/EditGasTypeController.js
+index 42488c3..e39e51d 100644
+--- a/src/controllers/EditGasTypeController.js
++++ b/src/controllers/EditGasTypeController.js
+@@ -1,5 +1,4 @@
+ const EditGasTypeUseCase = require('../usecases/EditGasTypeUseCase/EditGasType.usecase')
+-const LogService = require('./services/LogService')
+ 
+ /**
+  * @class EditGasTypeController
+diff --git a/src/controllers/EditVehicleController.js b/src/controllers/EditVehicleController.js
+index 45ab4dc..728e940 100644
+--- a/src/controllers/EditVehicleController.js
++++ b/src/controllers/EditVehicleController.js
+@@ -1,5 +1,4 @@
+ const EditVehicleUseCase = require('../usecases/EditVehicleUseCase/EditVehicle.usecase')
+-const LogService = require('./services/LogService')
+ 
+ class EditVehicleController {
+     /**
+diff --git a/src/controllers/FilterVehiclesController.js b/src/controllers/FilterVehiclesController.js
+index 3793a36..b0df8e7 100644
+--- a/src/controllers/FilterVehiclesController.js
++++ b/src/controllers/FilterVehiclesController.js
+@@ -1,5 +1,4 @@
+ const FilterVehiclesUseCase = require('../usecases/FilterVehiclesUseCase/FilterVehicles.usecase');
+-const LogService = require('./services/LogService');
+ 
+ /**
+  * @Class FilterVehiclesController
+diff --git a/src/controllers/GetVehicleDetailsController.js b/src/controllers/GetVehicleDetailsController.js
+index d12c4f0..69d44d6 100644
+--- a/src/controllers/GetVehicleDetailsController.js
++++ b/src/controllers/GetVehicleDetailsController.js
+@@ -1,5 +1,4 @@
+ const GetVehicleDetailsUseCase = require('../usecases/GetVehicleDetailsUseCase/GetVehicleDetails.usecase');
+-const LogService = require('./services/LogService');
+ 
+ /**
+  * @Class GetVehicleDetailsController
+diff --git a/src/controllers/RegisterBrandController.js b/src/controllers/RegisterBrandController.js
+index d9f02c0..8b175b8 100644
+--- a/src/controllers/RegisterBrandController.js
++++ b/src/controllers/RegisterBrandController.js
+@@ -1,4 +1,3 @@
+-const LogService = require('./services/LogService');
+ const RegisterBrandUseCase = require('../usecases/RegisterBrandUseCase/RegisterBrand.usecase');
+ 
+ class RegisterBrandController {
+diff --git a/src/controllers/RegisterGasTypeController.js b/src/controllers/RegisterGasTypeController.js
+index 13393ba..a6e8f4c 100644
+--- a/src/controllers/RegisterGasTypeController.js
++++ b/src/controllers/RegisterGasTypeController.js
+@@ -1,5 +1,4 @@
+ const RegisterGasTypeUseCase = require('../usecases/RegisterGasTypeUseCase/RegisterGasType.usecase');
+-const LogService = require('./services/LogService');
+ 
+ /**
+  * @Class RegisterGasTypeController
+diff --git a/src/controllers/RegisterVehicleController.js b/src/controllers/RegisterVehicleController.js
+index 32ce7d6..cfc6cc6 100644
+--- a/src/controllers/RegisterVehicleController.js
++++ b/src/controllers/RegisterVehicleController.js
+@@ -1,5 +1,4 @@
+ const RegisterVehicleUseCase = require('../usecases/RegisterVehicleUseCase/RegisterVehicle.usecase');
+-const LogService = require('./services/LogService');
+ 
+ /**
+  * @Class RegisterVehicleController
+diff --git a/src/controllers/services/LogService.js b/src/controllers/services/LogService.js
+deleted file mode 100644
+index ea4a075..0000000
+--- a/src/controllers/services/LogService.js
++++ /dev/null
+@@ -1,14 +0,0 @@
+-class LogService {
+-
+-  static async execute (log, adapter, queueName = 'log') {
+-
+-    try {
+-     await adapter.execute(log, queueName)
+-    }
+-    catch {
+-      console.log(log)
+-    }
+-  }
+-}
+-
+-module.exports = LogService
+\ No newline at end of file
+diff --git a/src/middlewares/AuthServiceMiddleware.js b/src/middlewares/AuthServiceMiddleware.js
+index 4ef29d5..c1402c2 100644
+--- a/src/middlewares/AuthServiceMiddleware.js
++++ b/src/middlewares/AuthServiceMiddleware.js
+@@ -1,20 +1,18 @@
+-const LogService = require("../controllers/services/LogService")
+-
+ class AuthServiceMiddleware {
+     
+ 
+     static async execute(request, response, next) {
+         const authService = request.app.get('AuthAdapter')
+-        const logService = request.app.get('LogService')
++        const logService = request.app.get('LogAdapter')
+ 
+         const token = request.headers.authorization
+         if(!token) {
+-            await LogService.execute({from: 'VehiclesService', data: 'Missing token', date: new Date(), status: 'error'}, logService)
++            await logService.execute('StandsService', 'Missing token', 'error')
+             return response.status(401).json({ error: 'Missing token' })
+         }
+         const decodedToken = await authService.login(token)
+         if(decodedToken.status !== 200) {
+-            await LogService.execute({from: 'VehiclesService', data: 'Invalid token', date: new Date(), status: 'error'},logService)
++            await logService.execute('StandsService', 'Invalid token', 'error')
+             return response.status(401).json(decodedToken.data)
+         }
+         next()
