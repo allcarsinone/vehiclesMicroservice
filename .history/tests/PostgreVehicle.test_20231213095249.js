@@ -26,6 +26,8 @@ describe('Tests', () => {
         	await startedContainer.stop()
       })
 
+      const token = '123456123456123456'
+
       describe('POST /vehicles/register', () => {
         it('should return 201 if vehicle is registered', async () => {
           const requestBody = { standid: 1, brandid: 1, gastypeid: 1, model: 'Teste', year: 2020, mileage: 0, price: 0, availability: true, description: 'Teste' }

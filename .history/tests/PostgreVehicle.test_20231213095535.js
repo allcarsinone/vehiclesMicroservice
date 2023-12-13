@@ -26,6 +26,8 @@ describe('Tests', () => {
         	await startedContainer.stop()
       })
 
+      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgsInVzZXJuYW1lIjoicGF1bG9ncmlwIiwibmFtZSI6IlBhdWxvIEVzdMOqdsOjbyIsImVtYWlsIjoicGF1bG9lc3RldmFvQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDEwJGl1cHFIdXV6SjNWNmpxNzY2S2U5UE9sUzBKamd2bkp6WUd4ZlJaVTFQWFVaN3l5SncvekpLIiwiYWRkcmVzcyI6bnVsbCwiY2l0eSI6bnVsbCwicG9zdGFsY29kZSI6bnVsbCwibW9iaWxlcGhvbmUiOm51bGwsInJvbGVfaWQiOjEsImlhdCI6MTcwMjQ2MTMwNCwiZXhwIjoxNzAyNDY4NTA0fQ.FK1QlYkiXwOjskLtaHY-N6hLTTiZMCoa1g_pP02BKBM'
+
       describe('POST /vehicles/register', () => {
         it('should return 201 if vehicle is registered', async () => {
           const requestBody = { standid: 1, brandid: 1, gastypeid: 1, model: 'Teste', year: 2020, mileage: 0, price: 0, availability: true, description: 'Teste' }

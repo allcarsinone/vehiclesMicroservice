@@ -1,4 +1,6 @@
 class AuthServiceMiddleware {
+    
+
     static async execute(request, response, next) {
         const authService = request.app.get('AuthAdapter')
         const logService = request.app.get('LogAdapter')
@@ -15,5 +17,6 @@ class AuthServiceMiddleware {
         }
         next()
     }
+
 }
 module.exports = AuthServiceMiddleware
