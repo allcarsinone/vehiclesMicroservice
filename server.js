@@ -8,6 +8,7 @@ const AxiosAuthServiceAdapter = require('./src/adapters/AxiosAuthServiceAdapter'
 const StandMockAdapter = require('./src/adapters/StandMockAdapter');
 const RabbitMQAdapter = require('./src/adapters/RabbitMQAdapter')
 const UpdateAvailabilityUseCase = require('./src/usecases/UpdateAvailabilityUseCase/UpdateAvailability.usecase')
+const DeleteAllVehiclesByStandUseCase = require('./src/usecases/DeleteAllVehiclesByStand/DeleteAllVehiclesByStand.usecase')
 
 dotenv.config()
 
@@ -32,6 +33,12 @@ const rabbitMQAdapter = app.get("RabbitMQAdapter")
 
 rabbitMQAdapter.listenToMessages(async (message) => {
     const usecase = new UpdateAvailabilityUseCase(vehicleRepository)
-    const result = await usecase.execute(parseInt(message.toString()))
+    const result = await usecase.execute(parseInt(message.content.toString()))
     console.log(result)
 })
+
+rabbitMQAdapter.listenToMessages(async (message) => {
+    const usecase = new DeleteAllVehiclesByStandUseCase(vehicleRepository)
+    const result = await usecase.execute(parseInt(message.content.toString()))
+    console.log(result)
+}, 'deleteVehicles')
