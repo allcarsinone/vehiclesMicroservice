@@ -90,6 +90,22 @@ class PostgreVehicleRepository {
 
   }
 
+  async getVehicles() {
+    const client = new pg.Client(this.baseURI)
+    await client.connect()
+    const result = await client.query(`SELECT * FROM vehicles INNER JOIN brands ON vehicles.brandid = brands.id INNER JOIN gastypes ON vehicles.gastypeid = gastypes.id`)
+    await client.end()
+
+    if (result.rows.length === 0) {
+      return undefined
+    }
+
+    const map = this.mapRows(result.rows)
+
+    return map
+    
+  }
+
   async getVehicleDetails (vehicleid) {
     const client = new pg.Client(this.baseURI)
     await client.connect()
