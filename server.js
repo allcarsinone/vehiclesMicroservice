@@ -9,6 +9,9 @@ const StandMockAdapter = require('./src/adapters/StandMockAdapter');
 
 dotenv.config()
 
+/**
+ * Define DATABASE_URL and GATEWAY URI in .env file and kubernetes deployment
+ */
 const app = makeApp(new PostgreVehicleRepository(process.env.DATABASE_URL), 
                     new PostgreGasTypeRepository(process.env.DATABASE_URL), 
                     new PostgreBrandRepository(process.env.DATABASE_URL),
