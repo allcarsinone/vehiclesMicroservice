@@ -6,19 +6,32 @@ const PostgreBrandRepository = require('./src/repositories/PostgreBrandRepositor
 const LogMockAdapter = require('./src/adapters/LogMockAdapter')
 const AxiosAuthServiceAdapter = require('./src/adapters/AxiosAuthServiceAdapter')
 const StandMockAdapter = require('./src/adapters/StandMockAdapter');
+const RabbitMQAdapter = require('./src/adapters/RabbitMQAdapter')
+const UpdateAvailabilityUseCase = require('./src/usecases/UpdateAvailabilityUseCase/UpdateAvailability.usecase')
 
 dotenv.config()
 
 /**
  * Define DATABASE_URL and GATEWAY URI in .env file and kubernetes deployment
  */
-const app = makeApp(new PostgreVehicleRepository(process.env.DATABASE_URL), 
+const vehicleRepository = new PostgreVehicleRepository(process.env.DATABASE_URL)
+const app = makeApp(vehicleRepository,
                     new PostgreGasTypeRepository(process.env.DATABASE_URL), 
                     new PostgreBrandRepository(process.env.DATABASE_URL),
                     new LogMockAdapter(),
                     new AxiosAuthServiceAdapter(process.env.GATEWAY_URI),
-                    new StandMockAdapter())
+                    new StandMockAdapter(),
+                    new RabbitMQAdapter(process.env.RABBITMQ_URI))
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on http://localhost:${process.env.PORT}/`)
+})
+
+app.get("RabbitMQAdapter")
+const rabbitMQAdapter = app.get("RabbitMQAdapter")
+
+rabbitMQAdapter.listenToMessages(async (message) => {
+    const usecase = new UpdateAvailabilityUseCase(vehicleRepository)
+    const result = await usecase.execute(parseInt(message.toString()))
+    console.log(result)
 })

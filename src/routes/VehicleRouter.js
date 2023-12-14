@@ -7,7 +7,7 @@ router.post('/register', AuthServiceMiddleware.execute, async (req, res) => {
     controller.execute(req, res)
 })
 
-router.get('/get', async (req, res) => {
+router.get('/get/:vehicleId', async (req, res) => {
     const controller = req.app.get('GetVehicleDetailsController')
     controller.execute(req, res)
 })

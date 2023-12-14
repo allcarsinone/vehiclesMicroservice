@@ -12,24 +12,24 @@ class GetVehicleDetailsController {
     }
 
     async execute(request, response) {
-        let { vehicleid } = request.body || {}
+        let { vehicleId } = request.params || {}
 
-        vehicleid = parseInt(vehicleid)
+        vehicleId = parseInt(vehicleId)
 
-        if(!vehicleid) {
-            await LogService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
-            return response.status(400).json({ error: 'All fields are required. It should have vehicleid' })
+        if(!vehicleId) {
+            await this.logService.execute('VehiclesService', 'Missing fields', 'error')
+            return response.status(400).json({ error: 'All fields are required. It should have vehicleId' })
         }
 
         const usecase = new GetVehicleDetailsUseCase(this.vehicleRepository)
-        const vehicle = await usecase.execute(vehicleid)
+        const vehicle = await usecase.execute(vehicleId)
 
         if(vehicle.error) {
-            await LogService.execute({from: 'VehiclesService', data: vehicle.error.message, date: new Date(), status: 'error'}, this.logService)
+            await this.logService.execute('VehiclesService', vehicle.error.message, 'error')
             return response.status(400).json({ error: vehicle.error.message })
         }
 
-        await LogService.execute({from: 'VehiclesService', data: `Get vehicle ${vehicle.data.id}`, date: new Date(), status: 'success'}, this.logService)
+        await this.logService.execute('VehiclesService', `Get vehicle ${vehicle.data.id}`,'success')
         return response.status(201).json(vehicle.data)
     }
 }
