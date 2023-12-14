@@ -13,7 +13,7 @@ const app = makeApp(new PostgreVehicleRepository(process.env.DATABASE_URL),
                     new PostgreGasTypeRepository(process.env.DATABASE_URL), 
                     new PostgreBrandRepository(process.env.DATABASE_URL),
                     new LogMockAdapter(),
-                    new AxiosAuthServiceAdapter(process.env.AUTHSERVICE_URI),
+                    new AxiosAuthServiceAdapter(process.env.GATEWAY_URI),
                     new StandMockAdapter())
 
 app.listen(process.env.PORT, () => {

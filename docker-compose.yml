@@ -7,9 +7,9 @@ services:
     environment:
       - POSTGRES_USER=dss
       - POSTGRES_PASSWORD=dss
-      - POSTGRES_DB=stand
+      - POSTGRES_DB=vehicles
     ports:
-      - '5432:5432'
+      - '5435:5432'
     volumes: 
       - db:/var/lib/postgresql/data
       - ./src/database:/docker-entrypoint-initdb.d

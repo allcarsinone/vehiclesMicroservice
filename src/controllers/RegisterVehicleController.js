@@ -14,7 +14,7 @@ class RegisterVehicleController {
         let { standid, brandid, gastypeid, model, year, mileage, price, availability, description } = request.body
 
         if(!standid || !brandid || !gastypeid || !model || !year || !mileage || !price || !availability || !description) {
-            await LogService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
+            await this.logService.execute('VehiclesService','Missing fields','error')
             return response.status(400).json({ error: 'All fields are required. It should have standid, brandid, gastypeid, model, year, mileage, price, availability, description' })
         }
 
@@ -22,11 +22,11 @@ class RegisterVehicleController {
         const vehicle = await usecase.execute({standid, brandid, gastypeid, model, year, mileage, price, availability, description})
 
         if(vehicle.error) {
-            await LogService.execute({from: 'VehiclesService', data: vehicle.error.message, date: new Date(), status: 'error'}, this.logService)
+            await this.logService.execute('VehiclesService', vehicle.error.message, 'error')
             return response.status(400).json({ error: vehicle.error.message })
         }
 
-        await LogService.execute({from: 'VehiclesService', data: `Vehicle ${vehicle.data.model} created`, date: new Date(), status: 'success'}, this.logService)
+        await this.logService.execute('VehiclesService', `Vehicle ${vehicle.data.model} created`, 'success')
         return response.status(201).json(vehicle.data)
     }
 }
