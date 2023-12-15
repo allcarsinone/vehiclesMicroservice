@@ -15,21 +15,21 @@ class DeleteGasTypeController {
     }
 
     async execute(request, response) {
-        let { id } = request.body || {}
-        if(!id) {
-            await LogService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
-            return response.status(400).json({ error: 'All fields are required. It should have id' })
+        let { gastypeid } = request.params || {}
+        if(!gastypeid) {
+            await this.logService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
+            return response.status(400).json({ error: 'All fields are required. It should have gastypeid' })
         }
 
         const usecase = new DeleteGasTypeUseCase(this.gasTypeRepository)
-        const gasType = await usecase.execute({id})
+        const gasType = await usecase.execute({gastypeid})
 
         if(gasType.error) {
-            await LogService.execute({from: 'VehiclesService', data: gasType.error.message, date: new Date(), status: 'error'}, this.logService)
+            await this.logService.execute({from: 'VehiclesService', data: gasType.error.message, date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: gasType.error.message })
         }
 
-        await LogService.execute({from: 'VehiclesService', data: `Gas Type deleted`, date: new Date(), status: 'success'}, this.logService)
+        await this.logService.execute({from: 'VehiclesService', data: `Gas Type deleted`, date: new Date(), status: 'success'}, this.logService)
         return response.status(204).json({})
     }
 

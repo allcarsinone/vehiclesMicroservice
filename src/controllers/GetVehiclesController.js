@@ -17,11 +17,11 @@ class GetVehiclesController {
         const vehicle = await usecase.execute()
 
         if(vehicle.error) {
-            await LogService.execute({from: 'VehiclesService', data: vehicle.error.message, date: new Date(), status: 'error'}, this.logService)
+            await this.logService.execute({from: 'VehiclesService', data: vehicle.error.message, date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: vehicle.error.message })
         }
 
-        await LogService.execute({from: 'VehiclesService', data: `Get vehicles.`, date: new Date(), status: 'success'}, this.logService)
+        await this.logService.execute({from: 'VehiclesService', data: `Get vehicles.`, date: new Date(), status: 'success'}, this.logService)
         return response.status(201).json(vehicle.data)
     }
 }

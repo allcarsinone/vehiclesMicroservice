@@ -19,7 +19,7 @@ class EditGasTypeController {
         let { id, name } = request.body || {}
 
         if(!id || !name) {
-            await LogService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
+            await this.logService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: 'All fields are required. It should have gastypeid, name' })
         }
 
@@ -27,11 +27,11 @@ class EditGasTypeController {
         const gasType = await usecase.execute({id, name})
 
         if(gasType.error) {
-            await LogService.execute({from: 'VehiclesService', data: gasType.error.message, date: new Date(), status: 'error'}, this.logService)
+            await this.logService.execute({from: 'VehiclesService', data: gasType.error.message, date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: gasType.error.message })
         }
 
-        await LogService.execute({from: 'VehiclesService', data: `Gas ${gasType.data.name} edited`, date: new Date(), status: 'success'}, this.logService)
+        await this.logService.execute({from: 'VehiclesService', data: `Gas ${gasType.data.name} edited`, date: new Date(), status: 'success'}, this.logService)
         return response.status(200).json(gasType.data)
     }
 }

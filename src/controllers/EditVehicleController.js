@@ -14,7 +14,7 @@ class EditVehicleController {
     async execute(request, response) {
         let { vehicleid, standid, brandid, gastypeid, model, year, mileage, price, availability, description } = request.body  || {}
         if(!vehicleid || !standid || !brandid || !gastypeid || !model || !year || !mileage || !price || !availability || !description) {
-            await LogService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
+            await this.logService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: 'All fields are required. It should have vehicleid, standid, brandid, gastypeid, model, year, mileage, price, availability, description' })
         }
 
@@ -22,11 +22,11 @@ class EditVehicleController {
         const vehicle = await usecase.execute({vehicleid, standid, brandid, gastypeid, model, year, mileage, price, availability, description})
 
         if(vehicle.error) {
-            await LogService.execute({from: 'VehiclesService', data: vehicle.error.message, date: new Date(), status: 'error'}, this.logService)
+            await this.logService.execute({from: 'VehiclesService', data: vehicle.error.message, date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: vehicle.error.message })
         }
 
-        await LogService.execute({from: 'VehiclesService', data: `Vehicle ${vehicle.data.vehicleid} edited`, date: new Date(), status: 'success'}, this.logService)
+        await this.logService.execute({from: 'VehiclesService', data: `Vehicle ${vehicle.data.vehicleid} edited`, date: new Date(), status: 'success'}, this.logService)
         return response.status(200).json(vehicle.data)
     }
 }

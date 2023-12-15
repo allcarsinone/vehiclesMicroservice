@@ -15,7 +15,7 @@ class RegisterGasTypeController {
         let { name } = request.body
 
         if(!name) {
-            await LogService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
+            await this.logService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: 'All fields are required. It should have name' })
         }
 
@@ -23,11 +23,11 @@ class RegisterGasTypeController {
         const gasType = await usecase.execute({name})
 
         if(gasType.error) {
-            await LogService.execute({from: 'VehiclesService', data: gasType.error.message, date: new Date(), status: 'error'}, this.logService)
+            await this.logService.execute({from: 'VehiclesService', data: gasType.error.message, date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: gasType.error.message })
         }
 
-        await LogService.execute({from: 'VehiclesService', data: `GasType ${gasType.data.name} created`, date: new Date(), status: 'success'}, this.logService)
+        await this.logService.execute({from: 'VehiclesService', data: `GasType ${gasType.data.name} created`, date: new Date(), status: 'success'}, this.logService)
         return response.status(201).json(gasType.data)
     }
 }

@@ -16,9 +16,9 @@ class DeleteVehicleController {
     }
 
     async execute(request, response) {
-        let { vehicleid } = request.body || {}
+        let { vehicleid } = request.params || {}
         if(!vehicleid) {
-            await LogService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
+            await this.logService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: 'All fields are required. It should have vehicleid' })
         }
 
@@ -26,11 +26,11 @@ class DeleteVehicleController {
         const vehicle = await usecase.execute({vehicleid})
 
         if(vehicle.error) {
-            await LogService.execute({from: 'VehiclesService', data: vehicle.error.message, date: new Date(), status: 'error'}, this.logService)
+            await this.logService.execute({from: 'VehiclesService', data: vehicle.error.message, date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: vehicle.error.message })
         }
         
-        await LogService.execute({from: 'VehiclesService', data: `Vehicled deleted`, date: new Date(), status: 'success'}, this.logService)
+        await this.logService.execute({from: 'VehiclesService', data: `Vehicled deleted`, date: new Date(), status: 'success'}, this.logService)
         return response.status(204).json({})
     }
 }

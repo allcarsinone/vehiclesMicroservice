@@ -22,7 +22,7 @@ router.put('/edit', AuthServiceMiddleware.execute, async (req, res) => {
     controller.execute(req, res)
 })
 
-router.delete('/delete', AuthServiceMiddleware.execute, async (req, res) => {
+router.delete('/delete/:vehicleid', AuthServiceMiddleware.execute, async (req, res) => {
     const controller = req.app.get('DeleteVehicleController')
     controller.execute(req, res)
 })
@@ -37,7 +37,7 @@ router.put('/brands/edit', AuthServiceMiddleware.execute, async (req, res) => {
     controller.execute(req, res)
 })
 
-router.delete('/brands/delete', AuthServiceMiddleware.execute, async (req, res) => {
+router.delete('/brands/delete/:brandid', AuthServiceMiddleware.execute, async (req, res) => {
     const controller = req.app.get('DeleteBrandController')
     controller.execute(req, res)
 })
@@ -52,7 +52,7 @@ router.put('/gastype/edit', AuthServiceMiddleware.execute, async (req, res) => {
     controller.execute(req, res)
 })
 
-router.delete('/gastype/delete', AuthServiceMiddleware.execute, async (req, res) => {
+router.delete('/gastype/delete/:gastypeid', AuthServiceMiddleware.execute, async (req, res) => {
     const controller = req.app.get('DeleteGasTypeController')
     controller.execute(req, res)
 })

@@ -13,13 +13,13 @@ class DeleteGasTypeUseCase {
 
     async execute(deleteGasTypeDto) {
         const withErrorHandling = handleError(async () => {
-            const gasTypeExists = await this.gasTypeRepository.findByID(deleteGasTypeDto.id)
+            const gasTypeExists = await this.gasTypeRepository.findByID(deleteGasTypeDto.gastypeid)
 
             if(!gasTypeExists) {
                 return Result.failed(new Error('Gas type doesnt exists'))
             }
 
-            const gastype = await this.gasTypeRepository.deleteGasType(deleteGasTypeDto.id)
+            const gastype = await this.gasTypeRepository.deleteGasType(deleteGasTypeDto.gastypeid)
 
             return Result.success(json({success: 'true'}))
         })

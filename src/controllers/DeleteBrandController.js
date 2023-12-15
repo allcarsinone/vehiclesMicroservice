@@ -17,9 +17,9 @@ class DeleteBrandController {
     }
 
     async execute(request, response) {
-        let { brandid } = request.body || {}
+        let { brandid } = request.params || {}
         if(!brandid) {
-            await LogService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
+            await this.logService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: 'All fields are required. It should have brandid' })
         }
 
@@ -27,11 +27,11 @@ class DeleteBrandController {
         const brand = await usecase.execute({brandid})
 
         if(brand.error) {
-            await LogService.execute({from: 'VehiclesService', data: brand.error.message, date: new Date(), status: 'error'}, this.logService)
+            await this.logService.execute({from: 'VehiclesService', data: brand.error.message, date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: brand.error.message })
         }
 
-        await LogService.execute({from: 'VehiclesService', data: `Brand deleted`, date: new Date(), status: 'success'}, this.logService)
+        await this.logService.execute({from: 'VehiclesService', data: `Brand deleted`, date: new Date(), status: 'success'}, this.logService)
         return response.status(204).json({})
     }
 }

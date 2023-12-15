@@ -19,12 +19,12 @@ class FilterVehiclesController {
         const vehiclesResult = await usecase.execute({brandname, model, year, mileage, price, availability, description, gastypename})
 
         if(vehiclesResult.error) {
-            await LogService.execute({from: 'VehiclesService', data: vehicle.error.message, date: new Date(), status: 'error'}, this.logService)
+            await this.logService.execute({from: 'VehiclesService', data: vehicle.error.message, date: new Date(), status: 'error'}, this.logService)
             return response.status(400).json({ error: vehiclesResult.error.message })
         }
 
         vehiclesResult.data.forEach(async vehicle => {
-            await LogService.execute({ from: 'VehiclesService', data: `Get vehicles filtered`, date: new Date(), status: 'success' }, this.logService);
+            await this.logService.execute({ from: 'VehiclesService', data: `Get vehicles filtered`, date: new Date(), status: 'success' }, this.logService);
         });
 
         return response.status(201).json(vehiclesResult.data);
