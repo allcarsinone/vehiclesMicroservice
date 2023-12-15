@@ -28,9 +28,10 @@ describe('Tests', () => {
 
       describe('POST /vehicles/register', () => {
         it('should return 201 if vehicle is registered', async () => {
-          const requestBody = { standid: 1, brandid: 1, gastypeid: 1, model: 'Teste', year: 2020, mileage: 100000, price: 20000, availability: true, description: 'Teste' }
+          const requestBody = { standid: 1, brandid: 1, gastypeid: 1, model: 'Teste', year: 2020, mileage: 0, price: 0, availability: true, description: 'Teste' }
           const token = '1234567890'
           const response = await request.post('/vehicles/register').set('Authorization', `Bearer ${token}`).send( requestBody )
+          //const response = (await request.post('/vehicles/register')).set('Authorization', `Bearer ${token}`).send(requestBody)
           expect(response.status).toBe(201)
           expect(response.body).toHaveProperty('brandid', requestBody.brandid)
           expect(response.body).toHaveProperty('gastypeid', requestBody.gastypeid)

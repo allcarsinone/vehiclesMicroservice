@@ -9,7 +9,6 @@ const StandMockAdapter = require('./src/adapters/StandMockAdapter');
 const RabbitMQAdapter = require('./src/adapters/RabbitMQAdapter')
 const UpdateAvailabilityUseCase = require('./src/usecases/UpdateAvailabilityUseCase/UpdateAvailability.usecase')
 const DeleteAllVehiclesByStandUseCase = require('./src/usecases/DeleteAllVehiclesByStand/DeleteAllVehiclesByStand.usecase')
-const ElasticLogService = require('./src/controllers/services/ElasticLogService')
 
 dotenv.config()
 
@@ -20,7 +19,7 @@ const vehicleRepository = new PostgreVehicleRepository(process.env.DATABASE_URL)
 const app = makeApp(vehicleRepository,
                     new PostgreGasTypeRepository(process.env.DATABASE_URL), 
                     new PostgreBrandRepository(process.env.DATABASE_URL),
-                    new ElasticLogService(process.env.ELASTICSEARCH_URL),
+                    new LogMockAdapter(),
                     new AxiosAuthServiceAdapter(process.env.GATEWAY_URI),
                     new StandMockAdapter(),
                     new RabbitMQAdapter(process.env.RABBITMQ_URI))

@@ -20,7 +20,7 @@ const vehicleRepository = new PostgreVehicleRepository(process.env.DATABASE_URL)
 const app = makeApp(vehicleRepository,
                     new PostgreGasTypeRepository(process.env.DATABASE_URL), 
                     new PostgreBrandRepository(process.env.DATABASE_URL),
-                    new ElasticLogService(process.env.ELASTICSEARCH_URL),
+                    new ElasticLogService(process.env.ELASTICSEARCH_URL)
                     new AxiosAuthServiceAdapter(process.env.GATEWAY_URI),
                     new StandMockAdapter(),
                     new RabbitMQAdapter(process.env.RABBITMQ_URI))
