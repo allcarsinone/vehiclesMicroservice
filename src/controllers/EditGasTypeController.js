@@ -20,7 +20,7 @@ class EditGasTypeController {
 
         if(!id || !name) {
             await this.logService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
-            return response.status(400).json({ error: 'All fields are required. It should have gastypeid, name' })
+            return response.status(400).json({ error: 'All fields are required. It should have id, name' })
         }
 
         const usecase = new EditGasTypeUseCase(this.gasTypeRepository)

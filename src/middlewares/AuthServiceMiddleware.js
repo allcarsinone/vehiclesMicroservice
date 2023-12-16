@@ -1,5 +1,8 @@
 class AuthServiceMiddleware {
+    
+
     static async execute(request, response, next) {
+        try {
         const authService = request.app.get('AuthAdapter')
         const logService = request.app.get('LogAdapter')
 
@@ -14,6 +17,10 @@ class AuthServiceMiddleware {
             return response.status(401).json(decodedToken.data)
         }
         next()
+        }
+        catch {
+          await logService.execute('StandsService', 'Token expired', 'error')
+          return res.status(401).json({message: "Token expired"})
+        }
     }
 }
-module.exports = AuthServiceMiddleware
