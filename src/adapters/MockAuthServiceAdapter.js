@@ -6,7 +6,7 @@ class MockAuthServiceAdapter {
                 id: '1',
                 name: 'mock user',
                 email: 'mockuser@test.com',
-                role: 'admin',
+                role_id: 1 ,
         
         
             }  
