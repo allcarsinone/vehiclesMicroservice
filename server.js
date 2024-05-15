@@ -10,6 +10,7 @@ const RabbitMQAdapter = require('./src/adapters/RabbitMQAdapter')
 const UpdateAvailabilityUseCase = require('./src/usecases/UpdateAvailabilityUseCase/UpdateAvailability.usecase')
 const DeleteAllVehiclesByStandUseCase = require('./src/usecases/DeleteAllVehiclesByStand/DeleteAllVehiclesByStand.usecase')
 const ElasticLogService = require('./src/controllers/services/ElasticLogService')
+const RabbitMockAdapter = require('./src/adapters/RabbitMockAdapter')
 
 dotenv.config()
 
@@ -18,12 +19,12 @@ dotenv.config()
  */
 const vehicleRepository = new PostgreVehicleRepository(process.env.DATABASE_URL)
 const app = makeApp(vehicleRepository,
-                    new PostgreGasTypeRepository(process.env.DATABASE_URL), 
-                    new PostgreBrandRepository(process.env.DATABASE_URL),
-                    new ElasticLogService(process.env.ELASTICSEARCH_URL),
-                    new AxiosAuthServiceAdapter(process.env.GATEWAY_URI),
-                    new StandMockAdapter(),
-                    new RabbitMQAdapter(process.env.RABBITMQ_URI))
+    new PostgreGasTypeRepository(process.env.DATABASE_URL),
+    new PostgreBrandRepository(process.env.DATABASE_URL),
+    new LogMockAdapter(),
+    new AxiosAuthServiceAdapter(process.env.GATEWAY_URI),
+    new StandMockAdapter(),
+    new RabbitMockAdapter())
 
 app.listen(process.env.PORT || 3003, () => {
     console.log(`Server is running on http://localhost:${process.env.PORT || 3003}/`)
