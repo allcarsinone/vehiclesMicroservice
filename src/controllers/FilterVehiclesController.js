@@ -12,14 +12,14 @@ class FilterVehiclesController {
     }
 
     async execute(request, response) {
-        let { brandname, model, year, mileage, price, availability, description, gastypename } = request.body || {}
+        let { brandname, model, year, mileage, price, availability, description, gastypename } = request.query || {}
 
         const usecase = new FilterVehiclesUseCase(this.vehicleRepository)
 
-        const vehiclesResult = await usecase.execute({brandname, model, year, mileage, price, availability, description, gastypename})
+        const vehiclesResult = await usecase.execute({ brandname, model, year, mileage, price, availability, description, gastypename })
 
-        if(vehiclesResult.error) {
-            await this.logService.execute({from: 'VehiclesService', data: vehicle.error.message, date: new Date(), status: 'error'}, this.logService)
+        if (vehiclesResult.error) {
+            await this.logService.execute({ from: 'VehiclesService', data: vehicle.error.message, date: new Date(), status: 'error' }, this.logService)
             return response.status(400).json({ error: vehiclesResult.error.message })
         }
 

@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
     controller.execute(req, res)
 })
 
-router.put('/edit', AuthServiceMiddleware.execute([roles.ADMIN, roles.MANAGER]), async (req, res) => {
+router.put('/edit', async (req, res) => {
     const controller = req.app.get('EditVehicleController')
     controller.execute(req, res)
 })

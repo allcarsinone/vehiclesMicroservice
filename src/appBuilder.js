@@ -15,10 +15,12 @@ const StandMockAdapter = require('./adapters/StandMockAdapter');
 const GetVehicleDetailsController = require('./controllers/GetVehicleDetailsController');
 const FilterVehiclesController = require('./controllers/FilterVehiclesController');
 const RabbitMockAdapter = require('./adapters/RabbitMockAdapter');
+const cors = require('cors');
 
-function makeApp(vehicleRepository, gasTypeRepository, brandRepository, logAdapter = new LogMockAdapter(), 
-                authService = new MockAuthServiceAdapter(), standService = new StandMockAdapter, rabbitMQAdapter = new RabbitMockAdapter()) {
+function makeApp(vehicleRepository, gasTypeRepository, brandRepository, logAdapter = new LogMockAdapter(),
+    authService = new MockAuthServiceAdapter(), standService = new StandMockAdapter, rabbitMQAdapter = new RabbitMockAdapter()) {
     const app = express();
+    app.use(cors());
     app.use(express.json());
     app.set('RegisterBrandController', new RegisterBrandController(brandRepository, logAdapter));
     app.set('EditBrandController', new EditBrandController(brandRepository, logAdapter));

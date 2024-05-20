@@ -6,27 +6,27 @@ class EditVehicleController {
      * @param {*} vehicleRepository a vehicleRepository 
      * @param {*} logService a logService
      */
-    constructor (vehicleRepository, logService) {
+    constructor(vehicleRepository, logService) {
         this.vehicleRepository = vehicleRepository
         this.logService = logService
     }
 
     async execute(request, response) {
-        let { vehicleid, standid, brandid, gastypeid, model, year, mileage, price, availability, description } = request.body  || {}
-        if(!vehicleid || !standid || !brandid || !gastypeid || !model || !year || !mileage || !price || !availability || !description) {
-            await this.logService.execute({from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error'}, this.logService)
+        let { vehicleid, standid, brandid, gastypeid, model, year, mileage, price, availability, description } = request.body || {}
+        if (!vehicleid || !standid || !brandid || !gastypeid || !model || !year || !mileage || !price || !description) {
+            await this.logService.execute({ from: 'VehiclesService', data: 'Missing fields', date: new Date(), status: 'error' }, this.logService)
             return response.status(400).json({ error: 'All fields are required. It should have vehicleid, standid, brandid, gastypeid, model, year, mileage, price, availability, description' })
         }
 
         const usecase = new EditVehicleUseCase(this.vehicleRepository)
-        const vehicle = await usecase.execute({vehicleid, standid, brandid, gastypeid, model, year, mileage, price, availability, description})
+        const vehicle = await usecase.execute({ vehicleid, standid, brandid, gastypeid, model, year, mileage, price, availability, description })
 
-        if(vehicle.error) {
-            await this.logService.execute({from: 'VehiclesService', data: vehicle.error.message, date: new Date(), status: 'error'}, this.logService)
+        if (vehicle.error) {
+            await this.logService.execute({ from: 'VehiclesService', data: vehicle.error.message, date: new Date(), status: 'error' }, this.logService)
             return response.status(400).json({ error: vehicle.error.message })
         }
 
-        await this.logService.execute({from: 'VehiclesService', data: `Vehicle ${vehicle.data.vehicleid} edited`, date: new Date(), status: 'success'}, this.logService)
+        await this.logService.execute({ from: 'VehiclesService', data: `Vehicle ${vehicle.data.vehicleid} edited`, date: new Date(), status: 'success' }, this.logService)
         return response.status(200).json(vehicle.data)
     }
 }
