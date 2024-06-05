@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
     controller.execute(req, res)
 })
 
-router.put('/edit', async (req, res) => {
+router.put('/', async (req, res) => {
     const controller = req.app.get('EditVehicleController')
     controller.execute(req, res)
 })
